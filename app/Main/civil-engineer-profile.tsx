@@ -7,7 +7,7 @@ import { Button } from "@/app/Main/uiMain/button"
 import { Building, HardHat, Ruler, Compass, Award, Mail, Phone } from "lucide-react"
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/Main/uiMain/tabs"
-import data from "@/app/components/Data"
+import data from "@/components/data"
 
 export function CivilEngineerProfile() {
   const { themeStyle } = useTheme()

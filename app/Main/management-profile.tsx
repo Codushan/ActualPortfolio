@@ -8,7 +8,7 @@ import { BarChart, PieChart, TrendingUp, Users, Briefcase, Calendar, Mail, Phone
 import Image from "next/image"
 import { Progress } from "@/app/Main/uiMain/progress"
 import { useState, useEffect } from "react"
-import data from "@/app/components/Data"
+import data from "@/components/data"
 
 export function ManagementProfile() {
   const { themeStyle } = useTheme()

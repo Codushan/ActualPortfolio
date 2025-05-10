@@ -7,7 +7,7 @@ import { Button } from "@/app/Main/uiMain/button"
 import { Code, Server, Database, Globe, Github, Linkedin, Twitter, X, Instagram } from "lucide-react"
 import Image from "next/image"
 import { Progress } from "@/app/Main/uiMain/progress"
-import data from "@/app/components/Data"
+import data from "@/components/data"
 
 export function SoftwareEngineerProfile() {
   const { themeStyle } = useTheme()
