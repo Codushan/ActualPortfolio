@@ -316,7 +316,7 @@ export default async function ProfilePage({
             priority
           />
 
-          <div className="absolute bottom-0 left-0 w-full p-8 md:p-16 bg-gradient-to-t from-black to-transparent">
+          <div className="absolute bottom-0 left-0 w-full h-full p-8 md:p-16 bg-gradient-to-t from-black to-transparent">
             <div className="container mx-auto">
               <div className="max-w-2xl">
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">{profile.featured.title}</h1>
