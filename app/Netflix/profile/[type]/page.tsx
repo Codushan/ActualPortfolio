@@ -11,6 +11,7 @@ import { ProfileSwitcher } from "@/app/Netflix/compNetflix/profile-switcher"
 import { SearchBar } from "@/app/Netflix/compNetflix/search-bar"
 import { useParams } from "next/navigation"
 import { useState } from "react"
+import { ThemeSwitcher } from "../../compNetflix/theme-switch";
 
 // Define profile data
 const profiles = {
@@ -300,6 +301,7 @@ export default async function ProfilePage({
               <Bell className="h-5 w-5" />
             </Button>
             <ProfileSwitcher currentProfileImage={profile.image} currentProfileName={profile.name} />
+            <ThemeSwitcher />
             <ThemeToggle />
           </div>
         </div>
