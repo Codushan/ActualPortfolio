@@ -6,7 +6,7 @@ import { Badge } from "@/app/Main/uiMain/badge"
 import { Button } from "@/app/Main/uiMain/button"
 import { Brush, Palette, Layers, ImageIcon, MessageSquare } from "lucide-react"
 import Image from "next/image"
-import data from "../components/Data"
+import data from "../../components/Data"
 
 export function DesignerProfile() {
   const { themeStyle } = useTheme()

@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/app/Main/uiMain/badge"
 import { Button } from "@/app/Main/uiMain/button"
 import { Code, Server, Database, Globe, Github, Linkedin, Twitter, X, Instagram } from "lucide-react"
-import data from "../components/Data"
+import data from "../../components/Data"
 
 export default function Home() {
   
