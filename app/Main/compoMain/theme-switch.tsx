@@ -21,7 +21,7 @@ export function ThemeSwitcher() {
     { id: "Amazon", name: "Amazon" },
     { id: "Netflix", name: "Netflix" },
     { id: "Youtube", name: "YouTube" },
-    { id: "Corporate", name: "Corporate" },
+    { id: "Main", name: "Main" },
   ]
 
   const handleThemeChange = (styleId: string) => {
