@@ -1,6 +1,7 @@
 // 'use client'
 import Link from "next/link"
 import Image from "next/image"
+import { type Metadata } from "next";
 import { notFound } from "next/navigation"
 import { Bell, Info, Play } from "lucide-react"
 import { Button } from "@/app/Netflix/uiNetflix/button"
@@ -239,11 +240,22 @@ const profiles = {
   },
 }
 
-export default function ProfilePage({ params }: { params: { type: string } }) {
-  const profile = profiles[params.type as keyof typeof profiles]
+type Props = {
+  params: {
+    type: string;
+  };
+};
+
+export default async function ProfilePage({
+  params,
+}: {
+  params: Promise<{ type: string }>;
+}) {
+  const { type } = await params;
+  const profile = profiles[type as keyof typeof profiles];
 
   if (!profile) {
-    notFound()
+    return <div>Profile not found</div>;
   }
 
   // Create search items from all projects
@@ -260,24 +272,24 @@ export default function ProfilePage({ params }: { params: { type: string } }) {
       {/* Navigation */}
       <header className="fixed top-0 w-full z-50 bg-gradient-to-b from-black/80 to-transparent">
         <div className="container mx-auto py-4 px-4 flex items-center">
-          <Link href={`/profile/${params.type}`} className="text-3xl font-bold text-red-600 mr-8">
+          <Link href={`/profile/${type}`} className="text-3xl font-bold text-red-600 mr-8">
             PORTFOLIX
           </Link>
 
           <nav className="hidden md:flex items-center space-x-6 text-sm">
-            <Link href={`/Netflix/profile/${params.type}`} className="font-medium text-white">
+            <Link href={`/Netflix/profile/${type}`} className="font-medium text-white">
               Home
             </Link>
-            <Link href={`/Netflix/profile/${params.type}#projects`} className="text-gray-300 hover:text-white">
+            <Link href={`/Netflix/profile/${type}#projects`} className="text-gray-300 hover:text-white">
               Projects
             </Link>
-            <Link href={`/Netflix/profile/${params.type}#skills`} className="text-gray-300 hover:text-white">
+            <Link href={`/Netflix/profile/${type}#skills`} className="text-gray-300 hover:text-white">
               Skills
             </Link>
-            <Link href={`/Netflix/profile/${params.type}#experience`} className="text-gray-300 hover:text-white">
+            <Link href={`/Netflix/profile/${type}#experience`} className="text-gray-300 hover:text-white">
               Experience
             </Link>
-            <Link href={`/Netflix/profile/${params.type}#contact`} className="text-gray-300 hover:text-white">
+            <Link href={`/Netflix/profile/${type}#contact`} className="text-gray-300 hover:text-white">
               Contact
             </Link>
           </nav>
@@ -323,7 +335,8 @@ export default function ProfilePage({ params }: { params: { type: string } }) {
         </div>
 
         {/* Content Rows */}
-        <div className="container mx-auto px-4 -mt-10 md:-mt-40 pb-16 space-y-8">
+        <div className="container my-20 mx-auto px-4 -mt-10 md:-mt-40 pb-16 md:pb-32 space-y-8">
+
           <div id="projects">
             {profile.categories.map((category, index) => (
               <ContentRow key={index} title={category.title} items={category.items} color={profile.color} />

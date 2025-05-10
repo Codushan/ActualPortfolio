@@ -1,6 +1,8 @@
 // app/layout.tsx
 import { Inter } from 'next/font/google'
 import { ThemeProvider } from '@/app/Main/compoMain/theme-provider'
+import '@/styles/globals.css'
+
 
 const inter = Inter({ subsets: ['latin'] })
 
