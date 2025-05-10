@@ -1,4 +1,4 @@
-// 'use client'
+'use client'
 import Link from "next/link"
 import Image from "next/image"
 import { type Metadata } from "next";
@@ -12,21 +12,22 @@ import { SearchBar } from "@/app/Netflix/compNetflix/search-bar"
 import { useParams } from "next/navigation"
 import { useState } from "react"
 import { ThemeSwitcher } from "../../compNetflix/theme-switch";
+import PortfolioFooter from "../../compNetflix/footer";
 
 // Define profile data
 const profiles = {
   "software-engineer": {
-    name: "Alex Johnson",
-    title: "Senior Software Engineer",
+    name: "Chandrabhushan Kumar",
+    title: "Software Engineer",
     color: "red",
-    image: "/placeholder.svg?height=400&width=400",
-    banner: "/placeholder.svg?height=600&width=1200",
+    image: "/CB3 copy.png",
+    banner: "/CB3 copy.png",
     bio: "Full-stack developer with 8+ years of experience building scalable web applications. Specialized in React, Node.js, and cloud architecture.",
     featured: {
-      title: "Full-Stack E-commerce Platform",
+      title: "Chandrabhushan Kumar",
       description:
         "A complete e-commerce solution with React frontend and Node.js backend, handling 1M+ monthly users with 99.9% uptime.",
-      image: "/placeholder.svg?height=600&width=1200",
+      image: "/CB3 copy.png",
     },
     categories: [
       {
@@ -72,11 +73,11 @@ const profiles = {
     ],
   },
   designer: {
-    name: "Sam Rivera",
-    title: "UX/UI Designer",
-    color: "blue",
-    image: "/placeholder.svg?height=400&width=400",
-    banner: "/placeholder.svg?height=600&width=1200",
+    name: "Chandrabhushan Kumar",
+    title: "Designer",
+    color: "red",
+    image: "/CB3 copy.png",
+    banner: "/CB3 copy.png",
     bio: "Creative designer with a passion for crafting beautiful and intuitive user experiences. Focused on user-centered design principles.",
     featured: {
       title: "Banking App Redesign",
@@ -128,11 +129,11 @@ const profiles = {
     ],
   },
   "civil-engineer": {
-    name: "Taylor Kim",
-    title: "Structural Engineer",
-    color: "green",
-    image: "/placeholder.svg?height=400&width=400",
-    banner: "/placeholder.svg?height=600&width=1200",
+    name: "Chandrabhushan Kumar",
+    title: "Civil Engineer",
+    color: "red",
+    image: "/CB3 copy.png",
+    banner: "/CB3 copy.png",
     bio: "Experienced civil engineer specializing in structural design and analysis. Passionate about sustainable construction and innovative building solutions.",
     featured: {
       title: "Urban Bridge Project",
@@ -184,11 +185,11 @@ const profiles = {
     ],
   },
   management: {
-    name: "Jordan Smith",
-    title: "Project Manager",
-    color: "purple",
-    image: "/placeholder.svg?height=400&width=400",
-    banner: "/placeholder.svg?height=600&width=1200",
+    name: "Chandrabhushan Kumar",
+    title: "Management",
+    color: "red",
+    image: "/CB3 copy.png",
+    banner: "/CB3 copy.png",
     bio: "Strategic leader with proven track record of delivering complex projects on time and under budget. Skilled in team building and stakeholder management.",
     featured: {
       title: "Digital Transformation",
@@ -247,12 +248,9 @@ type Props = {
   };
 };
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: Promise<{ type: string }>;
-}) {
-  const { type } = await params;
+export default function ProfilePage() {
+  const params = useParams();
+  const type = params?.type as string;
   const profile = profiles[type as keyof typeof profiles];
 
   if (!profile) {
@@ -267,6 +265,40 @@ export default async function ProfilePage({
       href: `#${item.title.toLowerCase().replace(/\s+/g, "-")}`,
     })),
   )
+
+  const handleDownload = (resume) => {
+    const link = document.createElement('a');
+    let fileName = '';
+    let filePath = '';
+
+    switch (resume) {
+      case 'Software Engineer':
+        filePath = '/Tech Resume.pdf';
+        fileName = 'Chandrabhushan_Tech_CV.pdf';
+        break;
+      case 'Designer':
+        filePath = '/Chandrabhushan_Kumar_Design.pdf';
+        fileName = 'Chandrabhushan_Design_CV.pdf';
+        break;
+      case 'Civil Engineer':
+        filePath = '/Marketing Resume.pdf';
+        fileName = 'Chandrabhushan_Marketing_CV.pdf';
+        break;
+      case 'Management':
+        filePath = '/Management Resume.pdf';
+        fileName = 'Chandrabhushan_Management_CV.pdf';
+        break;
+      default:
+        filePath = '/Tech Resume.pdf';
+        fileName = 'Chandrabhushan_CV.pdf';
+    }
+
+    link.href = filePath;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -300,7 +332,7 @@ export default async function ProfilePage({
             <Button variant="ghost" size="icon" className="text-white">
               <Bell className="h-5 w-5" />
             </Button>
-            <ProfileSwitcher currentProfileImage={profile.image} currentProfileName={profile.name} />
+            <ProfileSwitcher currentProfileImage={profile.image} currentProfileName={profile.title} />
             <ThemeSwitcher />
             <ThemeToggle />
           </div>
@@ -311,25 +343,48 @@ export default async function ProfilePage({
         {/* Hero Banner */}
         <div className="relative w-full h-[80vh]">
           <Image
-            src={profile.featured.image || "/placeholder.svg"}
-            alt={profile.featured.title}
+            src={profile.image || "/placeholder.svg"}
+            alt={profile.title}
             fill
-            className="object-cover object-center brightness-50"
+            className="object-cover brightness-50"
+            style={{ objectPosition: 'center -120px' }}
             priority
           />
 
           <div className="absolute bottom-0 left-0 w-full h-full p-8 md:p-16 bg-gradient-to-t from-black to-transparent">
             <div className="container mx-auto">
               <div className="max-w-2xl">
-                <h1 className="text-4xl md:text-6xl font-bold mb-4">{profile.featured.title}</h1>
-                <p className="text-lg mb-6">{profile.featured.description}</p>
+                <h1 className="text-4xl md:text-6xl font-bold mb-4">{profile.name}</h1>
+                <p className="text-2xl mb-6">{profile.title}</p>
+                <p className="text-lg mb-6">{profile.bio}</p>
                 <div className="flex space-x-4">
-                  <Button className={`bg-white text-black hover:bg-white/90 px-8`}>
-                    <Play className="h-5 w-5 mr-2" /> Play
+                  <Button
+                    className="bg-white text-black hover:bg-white/90 px-8"
+                    onClick={() => {
+                      document.getElementById('footer')?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    <Play className="h-5 w-5 mr-2" /> Hire Me
                   </Button>
-                  <Button variant="outline" className="border-gray-400 text-white px-8">
-                    <Info className="h-5 w-5 mr-2" /> More Info
+                  <Button variant="outline" className="border-gray-400 text-white px-8" onClick={() => handleDownload(profile.title)}>
+                    Download CV
                   </Button>
+                  {profile.title === 'Designer' && (
+                    <Button
+                      variant="outline"
+                      className="border-gray-400 text-white px-8"
+                      onClick={() => {
+                        const link = document.createElement('a');
+                        link.href = '/Portfolio CB.pdf'; // adjust the path if needed
+                        link.download = 'Chandrabhushan_Portfolio.pdf';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                      }}
+                    >
+                      Download Portfolio
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
@@ -337,8 +392,7 @@ export default async function ProfilePage({
         </div>
 
         {/* Content Rows */}
-        <div className="container my-20 mx-auto px-4 -mt-10 md:-mt-40 pb-16 md:pb-32 space-y-8">
-
+        <div className="container mx-auto px-4 -mt-10 md:-mt-40 pb-0 md:pb-0 space-y-8">
           <div id="projects">
             {profile.categories.map((category, index) => (
               <ContentRow key={index} title={category.title} items={category.items} color={profile.color} />
@@ -346,6 +400,9 @@ export default async function ProfilePage({
           </div>
         </div>
       </main>
+      <div id="footer">
+        <PortfolioFooter />
+      </div>
     </div>
   )
 }
