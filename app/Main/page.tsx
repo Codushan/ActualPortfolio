@@ -21,7 +21,9 @@ export default function Home() {
             <h1 className="text-2xl font-bold">Portfolio</h1>
             <div className="flex items-center gap-4">
               <ProfileSelector />
-              <ThemeSwitcher />
+              <div className="hidden md:block">
+                <ThemeSwitcher />
+              </div>
               <ModeToggle />
             </div>
           </div>
@@ -29,6 +31,11 @@ export default function Home() {
         <main className="flex-1">
           <Portfolio />
         </main>
+        
+        {/* Floating ThemeSwitcher for mobile */}
+        <div className="md:hidden fixed bottom-4 right-4 z-50">
+          <ThemeSwitcher />
+        </div>
       </div>
       <section id="contact" className="py-8 bg-muted rounded-lg">
         <h2 className="text-3xl font-bold mb-6 px-6">Contact Me</h2>
