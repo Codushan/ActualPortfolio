@@ -30,7 +30,7 @@ export function ProfileSelector() {
           <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-52">
         <DropdownMenuLabel>Select Profile</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {profiles.map((p) => (
