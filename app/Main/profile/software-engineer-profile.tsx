@@ -30,6 +30,13 @@ export function SoftwareEngineerProfile() {
 
   const sdeData = [
     {
+      title: "BaatWaat (A Chat Application)",
+      url: "https://baatwaat.onrender.com",
+      github: "https://github.com/Codushan/chat-app",
+      duration: "June 2025",
+      description: "•	Using React, MongoDB, Cluadinary, I made a chat app in which a user can login and chat with other members live, this was done using Socketjs",
+    },
+    {
       title: "Prithvi Website (Tech Fest - Civil Dept)",
       url: "https://prithvi25.in",
       github: "https://github.com/Codushan/Prithvi",
@@ -81,8 +88,8 @@ export function SoftwareEngineerProfile() {
     { name: "React", level: 85 },
     { name: "Next.js", level: 82 },
     { name: "Node.js", level: 78 },
-    { name: "MongoDB", level: 75 },
-    { name: "C++", level: 70 },
+    { name: "Figma", level: 80 },
+    { name: "C++", level: 60 },
   ];
 
   const [animatedSkills, setAnimatedSkills] = useState(skillsToDisplay.map((skill) => ({ ...skill, animatedLevel: 0 })))

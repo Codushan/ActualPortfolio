@@ -18,10 +18,10 @@ export function ThemeSwitcher() {
   const router = useRouter()
 
   const themeStyles = [
+    { id: "Main", name: "Main" },
     { id: "Amazon", name: "Amazon" },
     { id: "Netflix", name: "Netflix" },
     { id: "Youtube", name: "YouTube" },
-    { id: "Main", name: "Main" },
   ]
 
   const handleThemeChange = (styleId: string) => {

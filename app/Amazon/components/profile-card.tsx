@@ -20,7 +20,7 @@ export function ProfileCard({ name, title, image, rating, reviews, skills, slug 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="p-0">
-        <Link href={`Amazon/profile/${slug}`}>
+        <Link href={"Amazon/profile/" + slug}>
           <div className="aspect-square overflow-hidden">
             <Image
               src={image || "/placeholder.svg"}
@@ -61,7 +61,9 @@ export function ProfileCard({ name, title, image, rating, reviews, skills, slug 
         <Button variant="outline" size="sm">
           Contact
         </Button>
-        <Button size="sm">View Profile</Button>
+        <Button size="sm">
+          <Link href={"Amazon/profile/" + slug}>View Profile</Link>
+        </Button>
       </CardFooter>
     </Card>
   )

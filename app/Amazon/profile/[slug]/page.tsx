@@ -24,7 +24,7 @@ import { ThemeToggle } from "@/app/Amazon/components/theme-toggle"
 
 const profiles = {
   "software-engineer": {
-    name: "Alex Johnson",
+    name: "Chandrabhushan Kumar",
     title: "Software Engineer",
     image: "/placeholder.svg?height=400&width=400",
     rating: 4.9,
@@ -82,7 +82,7 @@ const profiles = {
     ],
   },
   designer: {
-    name: "Sophia Chen",
+    name: "Chandrabhushan Kumar",
     title: "UI/UX Designer",
     image: "/placeholder.svg?height=400&width=400",
     rating: 4.8,
@@ -140,7 +140,7 @@ const profiles = {
     ],
   },
   "civil-engineer": {
-    name: "Michael Rodriguez",
+    name: "Chandrabhushan Kumar",
     title: "Civil Engineer",
     image: "/placeholder.svg?height=400&width=400",
     rating: 4.7,
@@ -276,7 +276,7 @@ export default function ProfilePage({ params }: { params: { slug: string } }) {
       <main className="flex-1">
         <div className="container px-4 py-6 md:px-6">
           <Link
-            href="/"
+            href="/Amazon"
             className="inline-flex items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground mb-6"
           >
             <ArrowLeft className="h-4 w-4" />

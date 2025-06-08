@@ -2,10 +2,10 @@
 
 import { useProfileStore } from "@/lib/store"
 import { useTheme } from "@/app/Main/compoMain/theme-provider"
-import { DesignerProfile } from "@/app/Main/designer-profile"
-import { SoftwareEngineerProfile } from "@/app/Main/software-engineer-profile"
-import { CivilEngineerProfile } from "@/app/Main/civil-engineer-profile"
-import { ManagementProfile } from "@/app/Main/management-profile"
+import { DesignerProfile } from "@/app/Main/profile/designer-profile"
+import { SoftwareEngineerProfile } from "@/app/Main/profile/software-engineer-profile"
+import { CivilEngineerProfile } from "@/app/Main/profile/civil-engineer-profile"
+import { ManagementProfile } from "@/app/Main/profile/management-profile"
 
 export function Portfolio() {
   const { profile } = useProfileStore()

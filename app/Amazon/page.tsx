@@ -64,7 +64,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-6">
             <ProfileCard
-              name="Alex Johnson"
+              name="Chandrabhushan Kumar"
               title="Software Engineer"
               image="/placeholder.svg?height=300&width=300"
               rating={4.9}
@@ -73,7 +73,7 @@ export default function Home() {
               slug="software-engineer"
             />
             <ProfileCard
-              name="Sophia Chen"
+              name="Chandrabhushan Kumar"
               title="UI/UX Designer"
               image="/placeholder.svg?height=300&width=300"
               rating={4.8}
@@ -82,7 +82,7 @@ export default function Home() {
               slug="designer"
             />
             <ProfileCard
-              name="Michael Rodriguez"
+              name="Chandrabhushan Kumar"
               title="Civil Engineer"
               image="/placeholder.svg?height=300&width=300"
               rating={4.7}
@@ -91,7 +91,7 @@ export default function Home() {
               slug="civil-engineer"
             />
             <ProfileCard
-              name="Emily Williams"
+              name="Chandrabhushan Kumar"
               title="Project Manager"
               image="/placeholder.svg?height=300&width=300"
               rating={4.9}
@@ -101,7 +101,7 @@ export default function Home() {
             />
           </div>
         </section>
-        <section className="container px-4 py-12 md:px-6">
+        {/* <section className="container px-4 py-12 md:px-6">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-tight">Recently Viewed</h2>
             <Link href="#" className="text-sm font-medium underline underline-offset-4">
@@ -156,7 +156,7 @@ export default function Home() {
               slug="management"
             />
           </div>
-        </section>
+        </section> */}
       </main>
       <Footer />
     </div>

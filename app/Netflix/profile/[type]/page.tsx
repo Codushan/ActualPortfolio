@@ -266,7 +266,7 @@ export default function ProfilePage() {
     })),
   )
 
-  const handleDownload = (resume) => {
+  const handleDownload = (resume: string) => {
     const link = document.createElement('a');
     let fileName = '';
     let filePath = '';
