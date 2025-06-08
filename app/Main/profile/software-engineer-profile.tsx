@@ -4,85 +4,18 @@ import { useTheme } from "@/app/Main/compoMain/theme-provider"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/app/Main/uiMain/card"
 import { Badge } from "@/app/Main/uiMain/badge"
 import { Button } from "@/app/Main/uiMain/button"
-import { Code, Server, Database, Globe, Github, Linkedin, Twitter, X, Instagram } from "lucide-react"
+import { Code, Server, Database, Globe, Github, Linkedin, Twitter } from "lucide-react"
 import Image from "next/image"
 import { Progress } from "@/app/Main/uiMain/progress"
-import data from "@/components/data"
+import { myData, sdeExp, civilData, sdeProjects } from "@/lib/data"
+import { useScrollToContact } from "@/hooks/use-scroll-to-contact"
+import { useDownload } from "@/hooks/use-download"
 
 export function SoftwareEngineerProfile() {
   const { themeStyle } = useTheme()
-  const { myData, sdeExp, civilData, designData, managementData } = data;
+  const scrollToContact = useScrollToContact()
+  const { downloadResume } = useDownload()
 
-  const handleContactClick = () => {
-    // Using window.location.href with hash to navigate to the contact section
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // Fallback if the element isn't found in the current page
-      window.location.href = '/#contact';
-    }
-  };
-
-  // Add check to ensure sdeExp and civilData are arrays before spreading
-  const sdeExpArray = Array.isArray(sdeExp) ? sdeExp : [];
-  const civilDataArray = Array.isArray(civilData) ? civilData : [];
-
-  const sdeData = [
-    {
-      title: "BaatWaat (A Chat Application)",
-      url: "https://baatwaat.onrender.com",
-      github: "https://github.com/Codushan/chat-app",
-      duration: "June 2025",
-      description: "•	Using React, MongoDB, Cluadinary, I made a chat app in which a user can login and chat with other members live, this was done using Socketjs",
-    },
-    {
-      title: "Prithvi Website (Tech Fest - Civil Dept)",
-      url: "https://prithvi25.in",
-      github: "https://github.com/Codushan/Prithvi",
-      duration: "Jan – Mar 2025",
-      description: "Led UI/UX and full-stack development as Tech Head. Live at prithvi25.in",
-    },
-    {
-      title: "RIG Club Website",
-      url: "https://rignitc.com",
-      github: "https://github.com/Codushan/rig_web",
-      duration: "Oct – Dec 2024",
-      description: "Built full-stack website with UI/UX for Robotics Interested Group. Live at rignitc.com",
-    },
-    {
-      title: "Login & Signup Function",
-      url: "https://login-2-ui.vercel.app/",
-      github: "https://github.com/Codushan/Login-2",
-      duration: "Dec 2024",
-      description: "Developed backend-based login/signup functionality. Live at https://login-2-ui.vercel.app/",
-    },
-    {
-      title: "Location Search Tool (India > Bihar)",
-      url: "https://thecbweb.netlify.app/",
-      github: "http://github.com/Codushan/My-Web",
-      duration: "Nov 2024",
-      description: "Created a web app for searching Indian states and districts (currently Bihar only). Live at https://thecbweb.netlify.app/",
-    },
-    {
-      title: "Tic-Tac-Toe Game",
-      url: "https://tictactoecb.netlify.app/",
-      github: "",
-      duration: "Aug 2024",
-      description: "Created simple browser games like Stone Paper Scissors and Tic-Tac-Toe.",
-    },
-    {
-      title: "Stone Paper Scissors Game",
-      url: "https://stonepaperscissorchb.netlify.app/",
-      github: "",
-      duration: "Aug 2024",
-      description: "Created simple browser games like Stone Paper Scissors and Tic-Tac-Toe.",
-    }
-  ];
-
-  // Map skills from your data
-  const techSkills = myData.skills.tech;
-  // Select a subset of skills to show with progress bars
   const skillsToDisplay = [
     { name: "JavaScript", level: 88 },
     { name: "React", level: 85 },
@@ -112,10 +45,13 @@ export function SoftwareEngineerProfile() {
       }, 15)
 
       return () => clearInterval(interval)
-    }, 500) // Delay start of animation
+    }, 500)
 
     return () => clearTimeout(timer)
   }, [])
+
+  const sdeExpArray = Array.isArray(sdeExp) ? sdeExp : [];
+  const civilDataArray = Array.isArray(civilData) ? civilData : [];
 
   return (
     <div className="space-y-8">
@@ -128,22 +64,15 @@ export function SoftwareEngineerProfile() {
             Full-stack developer with experience building responsive web applications and digital solutions.
           </p>
           <div className="flex flex-wrap gap-2">
-            {techSkills.slice(0, 6).map((skill) => (
+            {myData.skills.tech.slice(0, 6).map((skill) => (
               <Badge key={skill}>{skill}</Badge>
             ))}
           </div>
           <div className="flex gap-3 pt-4">
-            <Button onClick={handleContactClick}>Hire Me</Button>
+            <Button onClick={scrollToContact}>Hire Me</Button>
             <Button
               variant="outline"
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = '/Tech Resume.pdf';
-                link.download = 'Chandrabhushan_CV.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
+              onClick={() => downloadResume('Software Engineer')}
             >
               Download CV
             </Button>
@@ -237,7 +166,7 @@ export function SoftwareEngineerProfile() {
       <section className="py-8">
         <h2 className="text-3xl font-bold mb-6">Featured Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sdeData.map((project, idx) => (
+          {sdeProjects.map((project, idx) => (
             <Card key={idx} className="overflow-hidden">
               <div className="aspect-video relative">
                 <iframe
@@ -281,14 +210,12 @@ export function SoftwareEngineerProfile() {
       <section className="py-8">
         <h2 className="text-3xl font-bold mb-6">Experience</h2>
         <div className="space-y-6">
-          {/* Combining SDE and Civil experiences with proper checks */}
           {[...sdeExpArray, ...civilDataArray].map((job, index) => (
             <Card key={index}>
               <CardHeader>
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle>{job.title}</CardTitle>
-                    {/* <CardDescription>{job.guide || ''}</CardDescription> */}
                   </div>
                   <Badge>{job.duration}</Badge>
                 </div>
