@@ -8,6 +8,7 @@ import { Code, Server, Database, Globe, Github, Linkedin, Twitter, X, Instagram 
 import Image from "next/image"
 import { Progress } from "@/app/Main/uiMain/progress"
 import data from "@/components/data"
+import Stats from "../compoMain/codingStats"
 
 export function SoftwareEngineerProfile() {
   const { themeStyle } = useTheme()
@@ -171,6 +172,11 @@ export function SoftwareEngineerProfile() {
             />
           </div>
         </div>
+      </section>
+      
+      <section className="py-0">
+        <h2 className="text-3xl font-bold mb-6">Coding Platform Stats</h2>
+          <Stats />
       </section>
 
       <section className="py-8">
