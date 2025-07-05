@@ -17,7 +17,6 @@ const nextConfig = {
   },
   pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
   // Configure rewrites to handle components directory and API proxy
