@@ -545,7 +545,7 @@ const GitHubStatsSection: React.FC<{ githubStats: { repos: number; stars: number
         </div>
 
         {/* Languages Section */}
-        <div className="bg-background p-4 rounded-lg col-span-1 md:col-span-2 lg:col-span-4">
+        {/* <div className="bg-background p-4 rounded-lg col-span-1 md:col-span-2 lg:col-span-4">
           <h3 className="text-gray-300 text-base mb-4">Top Languages</h3>
           <div className="space-y-2">
             {githubStats.languages.length > 0 ? (
@@ -565,7 +565,7 @@ const GitHubStatsSection: React.FC<{ githubStats: { repos: number; stars: number
               <p className="text-gray-400">No language data available.</p>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

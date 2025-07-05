@@ -91,4 +91,7 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Prevent white flash by defaulting to dark theme */
+  /* Removed to prevent hydration issues */
 }
