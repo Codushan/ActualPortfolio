@@ -8,22 +8,12 @@ import { BarChart, PieChart, TrendingUp, Users, Briefcase, Calendar, Mail, Phone
 import Image from "next/image"
 import { Progress } from "@/app/Main/uiMain/progress"
 import { useState, useEffect } from "react"
-import data from "@/components/data"
+import { myData, managementData } from "@/lib/data"
+import { useScrollToContact } from "@/hooks/use-scroll-to-contact"
 
 export function ManagementProfile() {
   const { themeStyle } = useTheme()
-  const { myData, civilData, designData, managementData } = data;
-
-  const handleContactClick = () => {
-    // Using window.location.href with hash to navigate to the contact section
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // Fallback if the element isn't found in the current page
-      window.location.href = '/#contact';
-    }
-  };
+  const scrollToContact = useScrollToContact()
 
   const skills = [
     { name: "Strategic Planning", level: 95 },
@@ -54,7 +44,7 @@ export function ManagementProfile() {
       }, 15)
 
       return () => clearInterval(interval)
-    }, 500) // Delay start of animation
+    }, 500)
 
     return () => clearTimeout(timer)
   }, [])
@@ -77,7 +67,7 @@ export function ManagementProfile() {
             <Badge>Business Development</Badge>
           </div>
           <div className="flex gap-3 pt-4">
-            <Button onClick={handleContactClick}>Contact Me</Button>
+            <Button onClick={scrollToContact}>Contact Me</Button>
             <Button variant="outline">Download Resume</Button>
           </div>
         </div>

@@ -1,4 +1,3 @@
-import { Stats } from 'node:fs'; // This import seems unused and can likely be removed.
 import React, { useState, useEffect } from 'react';
 
 // Tailwind CSS is assumed to be available.
@@ -17,10 +16,30 @@ const Title: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <h2 className="text-2xl font-bold text-white mb-4 text-center">{children}</h2>
 );
 
+// Define types for better type safety
+interface TabDataItem {
+  total: { completed: number; total: number; percentage: number };
+  easy: { completed: number; total: number };
+  medium: { completed: number; total: number };
+  hard: { completed: number; total: number };
+}
+
+interface GitHubData {
+  repos: number;
+  stars: number;
+  followers: number;
+  contributions: number;
+  languages: { name: string; percentage: number }[];
+}
+
+interface TabData {
+  [key: string]: TabDataItem | GitHubData;
+}
+
 // Main App component
 const CodingStats: React.FC = () => {
   // Define hardcoded data for tabs (used for Coding Ninjas and Blind 75, or as fallbacks)
-  const tabData = {
+  const tabData: TabData = {
     "LeetCode": {
       total: { completed: 54, total: 100, percentage: 10 },
       easy: { completed: 19, total: 20 },
@@ -118,27 +137,85 @@ const CodingStats: React.FC = () => {
   const [actualStats, setActualStats] = useState<Stats | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [animationReady, setAnimationReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showComponent, setShowComponent] = useState(false);
+  const [hasCheckedCache, setHasCheckedCache] = useState(false);
+  const [isFirstLoad, setIsFirstLoad] = useState(() => {
+    // Check localStorage immediately to determine if this is first load
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('hasLoadedBefore');
+    }
+    return true; // Default to first load during SSR
+  });
+
+  // Check for cached data on component mount
+  useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+    
+    const cachedData = localStorage.getItem('codingStatsData');
+    const cachedTimestamp = localStorage.getItem('codingStatsTimestamp');
+    
+    if (cachedData && cachedTimestamp) {
+      const timestamp = parseInt(cachedTimestamp);
+      const now = Date.now();
+      const cacheAge = now - timestamp;
+      const cacheValidDuration = 60 * 60 * 1000; // 1 hour in milliseconds (increased cache duration)
+      
+      if (cacheAge < cacheValidDuration) {
+        // Use cached data if it's less than 1 hour old
+        try {
+          const parsedData = JSON.parse(cachedData);
+          setActualStats(parsedData);
+          setAnimationReady(true);
+          setIsLoading(false);
+          setHasCheckedCache(true);
+          // Show immediately if not first load, or with animation if first load
+          if (isFirstLoad) {
+            // First load - show with animation
+            setTimeout(() => {
+              setShowComponent(true);
+            }, 50);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('hasLoadedBefore', 'true');
+            }
+          } else {
+            // Not first load - show immediately without animation
+            setShowComponent(true);
+          }
+          return; // Exit early, don't fetch from APIs
+        } catch (err) {
+          console.error('Error parsing cached data:', err);
+          // Continue to fetch fresh data if cache is corrupted
+        }
+      }
+    }
+    
+    // If no valid cache, set loading to true and fetch fresh data
+    setIsLoading(true);
+    setHasCheckedCache(true);
+  }, [isFirstLoad]); // Add isFirstLoad as dependency
 
   // Fetch stats from APIs on component mount
   useEffect(() => {
     const fetchStats = async () => {
       try {
         setError(null);
-        //Coding Ninja API
-        const codingNinjaResponse = await fetch('https://www.naukri.com/code360/profile/Codushan');
-        const codinNinjaData = await codingNinjaResponse.json();
+        
+        // Fetch all APIs in parallel for faster loading
+        const [codingNinjaResponse, githubResponse, leetcodeResponse, gfgResponse] = await Promise.all([
+          fetch('https://coding-ninja-api.vercel.app/api/test/Codushan'),
+          fetch('https://api.github.com/users/Codushan'),
+          fetch('https://leetcode-stats-api.herokuapp.com/Cbonleet'),
+          fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://gfgstatscard.vercel.app/chandrabhushq6z0?raw=true')}`)
+        ]);
 
-        // Fetch GitHub API
-        const githubResponse = await fetch('https://api.github.com/users/Codushan');
-        const githubData = await githubResponse.json();
-
-        // Fetch LeetCode API
-        const leetcodeResponse = await fetch('https://leetcode-stats-api.herokuapp.com/Cbonleet');
-        const leetcodeData = await leetcodeResponse.json();
-
-        // Fetch GeeksforGeeks API with allorigins CORS proxy
-        const gfgResponse = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://gfgstatscard.vercel.app/chandrabhushq6z0?raw=true')}`);
-        const gfgData = await gfgResponse.json();
+        const [codinNinjaData, githubData, leetcodeData, gfgData] = await Promise.all([
+          codingNinjaResponse.json(),
+          githubResponse.json(),
+          leetcodeResponse.json(),
+          gfgResponse.json()
+        ]);
 
         if (leetcodeData.status === 'error') {
           throw new Error(leetcodeData.message);
@@ -178,12 +255,29 @@ const CodingStats: React.FC = () => {
           }
         };
 
+        // Cache the data in localStorage with longer duration
+        if (typeof window !== 'undefined') {
+          localStorage.setItem('codingStatsData', JSON.stringify(newStats));
+          localStorage.setItem('codingStatsTimestamp', Date.now().toString());
+        }
+
         setActualStats(newStats);
 
-        // Wait a moment before starting animations (if any)
-        setTimeout(() => {
+                  // Show immediately if not first load, or with animation if first load
           setAnimationReady(true);
-        }, 300);
+          setIsLoading(false);
+          if (isFirstLoad) {
+            // First load - show with animation
+            setTimeout(() => {
+              setShowComponent(true);
+            }, 50);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem('hasLoadedBefore', 'true');
+            }
+          } else {
+            // Not first load - show immediately without animation
+            setShowComponent(true);
+          }
 
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -193,11 +287,15 @@ const CodingStats: React.FC = () => {
           console.error('Unknown error occurred:', err);
         }
         setError('Failed to fetch stats. Please check console for details.');
+        setIsLoading(false);
       }
     };
 
-    fetchStats();
-  }, []); // Empty dependency array means this effect runs once on mount
+    // Only fetch if we don't have valid cached data, we're in loading state, and we've checked cache
+    if (!actualStats && isLoading && hasCheckedCache) {
+      fetchStats();
+    }
+  }, [actualStats, isLoading, hasCheckedCache, isFirstLoad]); // Add isFirstLoad as dependency
 
   // Set actual stats for the view after loading and animation is ready
   useEffect(() => {
@@ -214,16 +312,16 @@ const CodingStats: React.FC = () => {
       case "LeetCode":
         return {
           total: { completed: stats.leetcode.solved, total: 100, percentage: (stats.leetcode.solved / 100) * 100 },
-          easy: { completed: stats.leetcode.easySolved, total: tabData["LeetCode"].easy.total },
-          medium: { completed: stats.leetcode.mediumSolved, total: tabData["LeetCode"].medium.total },
-          hard: { completed: stats.leetcode.hardSolved, total: tabData["LeetCode"].hard.total },
+          easy: { completed: stats.leetcode.easySolved, total: (tabData["LeetCode"] as TabDataItem).easy.total },
+          medium: { completed: stats.leetcode.mediumSolved, total: (tabData["LeetCode"] as TabDataItem).medium.total },
+          hard: { completed: stats.leetcode.hardSolved, total: (tabData["LeetCode"] as TabDataItem).hard.total },
         };
       case "GFG":
         return {
           total: { completed: stats.gfg.total_problems_solved, total: 100, percentage: (stats.gfg.total_problems_solved / 100) * 100 },
-          easy: { completed: stats.gfg.Easy, total: tabData["GFG"].easy.total },
-          medium: { completed: stats.gfg.Medium, total: tabData["GFG"].medium.total },
-          hard: { completed: stats.gfg.Hard, total: tabData["GFG"].hard.total },
+          easy: { completed: stats.gfg.Easy, total: (tabData["GFG"] as TabDataItem).easy.total },
+          medium: { completed: stats.gfg.Medium, total: (tabData["GFG"] as TabDataItem).medium.total },
+          hard: { completed: stats.gfg.Hard, total: (tabData["GFG"] as TabDataItem).hard.total },
         };
       case "Coding Ninjas":
         return tabData[activeTab]; // Uses hardcoded data for Coding Ninjas
@@ -236,6 +334,11 @@ const CodingStats: React.FC = () => {
 
   const displayData = getDisplayData();
 
+  // Show loading state - return null to hide the entire component
+  if (isLoading) {
+    return null;
+  }
+
   if (error) {
     return (
       <StatsContainer>
@@ -246,7 +349,14 @@ const CodingStats: React.FC = () => {
   }
 
   return (
-    // <div className="min-h-screen bg-gray-900 text-gray-100 p-4 font-sans flex items-center justify-center">
+    <div 
+      className={`transform transition-all duration-700 ease-out ${
+        showComponent 
+          ? 'translate-x-0 opacity-100' 
+          : 'translate-x-full opacity-0'
+      }`}
+    >
+    <h2 className="text-3xl font-bold mb-6">Coding Platform Stats</h2>
     <div className="w-full max-w-8xl bg-gray-800 rounded-lg shadow-lg">
       {/* Navigation Tabs */}
       <div className="flex justify-around border-b border-gray-700">
@@ -273,6 +383,7 @@ const CodingStats: React.FC = () => {
               completed={(displayData as any).total.completed}
               total={(displayData as any).total.total}
               percentage={(displayData as any).total.percentage}
+              color="bg-blue-500"
               showRing={true}
             />
 
@@ -281,6 +392,7 @@ const CodingStats: React.FC = () => {
               title="Easy"
               completed={(displayData as any).easy.completed}
               total={(displayData as any).easy.total}
+              percentage={(displayData as any).easy.completed / (displayData as any).easy.total * 100}
               color="bg-green-500"
               showRing={false}
             />
@@ -290,6 +402,7 @@ const CodingStats: React.FC = () => {
               title="Medium"
               completed={(displayData as any).medium.completed}
               total={(displayData as any).medium.total}
+              percentage={(displayData as any).medium.completed / (displayData as any).medium.total * 100}
               color="bg-yellow-500"
               showRing={false}
             />
@@ -299,6 +412,7 @@ const CodingStats: React.FC = () => {
               title="Hard"
               completed={(displayData as any).hard.completed}
               total={(displayData as any).hard.total}
+              percentage={(displayData as any).hard.completed / (displayData as any).hard.total * 100}
               color="bg-red-500"
               showRing={false}
             />
@@ -306,12 +420,18 @@ const CodingStats: React.FC = () => {
         </div>
       )}
     </div>
-    // </div>
+    </div>
   );
 }
 
 // Tab component for navigation
-function Tab({ title, isActive, onClick }) {
+interface TabProps {
+  title: string;
+  isActive: boolean;
+  onClick: (title: string) => void;
+}
+
+function Tab({ title, isActive, onClick }: TabProps) {
   return (
     <div
       className={`py-3 px-6 cursor-pointer text-sm font-medium rounded-t-lg ${isActive
@@ -326,7 +446,16 @@ function Tab({ title, isActive, onClick }) {
 }
 
 // Progress Card component for displaying progress
-function ProgressCard({ title, completed, total, percentage, color, showRing }) {
+interface ProgressCardProps {
+  title: string;
+  completed: number;
+  total: number;
+  percentage: number;
+  color: string;
+  showRing: boolean;
+}
+
+function ProgressCard({ title, completed, total, percentage, color, showRing }: ProgressCardProps) {
   // Calculate percentage if not provided (for linear bar)
   const calculatedPercentage = total > 0 ? (completed / total) * 100 : 0;
 
@@ -385,33 +514,33 @@ function ProgressCard({ title, completed, total, percentage, color, showRing }) 
 }
 
 // New component for displaying GitHub statistics
-const GitHubStatsSection: React.FC<{ githubStats: Stats['github'] }> = ({ githubStats }) => {
+const GitHubStatsSection: React.FC<{ githubStats: { repos: number; stars: number; followers: number; contributions: number; languages: { name: string; percentage: number }[] } }> = ({ githubStats }) => {
   return (
     <div className="p-6">
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {/* Repositories Card */}
         <div className="bg-background p-4 rounded-lg flex flex-col items-start">
           <h3 className="text-gray-300 text-base mb-2">Public Repositories</h3>
-          <p className="text-white text-6xl font-bold">{githubStats.repos}</p>
+          <p className="text-primary text-6xl font-bold">{githubStats.repos}</p>
         </div>
 
         {/* Followers Card */}
         <div className="bg-background p-4 rounded-lg flex flex-col items-start">
           <h3 className="text-gray-300 text-base mb-2">Followers</h3>
-          <p className="text-white text-6xl font-bold">{githubStats.followers}</p>
+          <p className="text-primary text-6xl font-bold">{githubStats.followers}</p>
         </div>
 
         {/* Stars Card (Note: Stars are hardcoded to 0 as the current API does not provide this directly) */}
         <div className="bg-background p-4 rounded-lg flex flex-col items-start">
           <h3 className="text-gray-300 text-base mb-2">Total Stars</h3>
-          <p className="text-white text-6xl font-bold">{githubStats.stars}</p>
+          <p className="text-primary text-6xl font-bold">{githubStats.stars}</p>
           <p className="text-gray-400 text-sm mt-1">(Requires more API calls)</p>
         </div>
 
         {/* Contributions Card (Note: Contributions are hardcoded to 0 as the current API does not provide this directly) */}
         <div className="bg-background p-4 rounded-lg flex flex-col items-start">
           <h3 className="text-gray-300 text-base mb-2">Total Contributions</h3>
-          <p className="text-white text-6xl font-bold">{githubStats.contributions}</p>
+          <p className="text-primary text-6xl font-bold">{githubStats.contributions}</p>
           <p className="text-gray-400 text-sm mt-1">(Requires more API calls)</p>
         </div>
 
@@ -420,7 +549,7 @@ const GitHubStatsSection: React.FC<{ githubStats: Stats['github'] }> = ({ github
           <h3 className="text-gray-300 text-base mb-4">Top Languages</h3>
           <div className="space-y-2">
             {githubStats.languages.length > 0 ? (
-              githubStats.languages.map((lang, index) => (
+              githubStats.languages.map((lang: { name: string; percentage: number }, index: number) => (
                 <div key={index} className="flex items-center">
                   <span className="text-gray-200 w-24">{lang.name}</span>
                   <div className="flex-grow bg-gray-600 rounded-full h-4 ml-4">

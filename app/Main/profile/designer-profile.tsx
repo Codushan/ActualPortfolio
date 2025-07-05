@@ -6,40 +6,14 @@ import { Badge } from "@/app/Main/uiMain/badge"
 import { Button } from "@/app/Main/uiMain/button"
 import { Brush, Palette, Layers, ImageIcon, MessageSquare } from "lucide-react"
 import Image from "next/image"
-import data from "@/components/data"
+import { myData, designData, designProjects } from "@/lib/data"
+import { useScrollToContact } from "@/hooks/use-scroll-to-contact"
+import { useDownload } from "@/hooks/use-download"
 
 export function DesignerProfile() {
   const { themeStyle } = useTheme()
-  const { myData, sdeExp, civilData, designData, managementData } = data;
-
-  const handleContactClick = () => {
-    // Using window.location.href with hash to navigate to the contact section
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // Fallback if the element isn't found in the current page
-      window.location.href = '/#contact';
-    }
-  };
-
-  const projects = [
-    {
-      title: "DND Club Website UI/UX",
-      duration: "Oct – Dec 2024",
-      src: "/dnd.png",
-      figma: "https://www.figma.com/proto/XkRLxvi0y52gy8YcIo3NK8/DnD?page-id=0%3A1&node-id=112-309&starting-point-node-id=112%3A309&t=jE6FIR2LlMbjEiY7-1",
-      description: "Designed UI/UX for the DND & SNS Club website. Shared via Figma link.",
-    },
-    {
-      title: "RIG Club Website UI/UX",
-      duration: "Oct – Dec 2024",
-      src: "/rig.png",
-      figma: "https://rignitc.com/",
-      description: "Designed UI/UX for the Robotics Interested Group Club website.",
-    },
-  ];
-
+  const scrollToContact = useScrollToContact()
+  const { downloadResume, downloadPortfolio } = useDownload()
 
   return (
     <div className="space-y-8">
@@ -59,30 +33,16 @@ export function DesignerProfile() {
             <Badge>Motion Graphics</Badge>
           </div>
           <div className="flex gap-3 pt-4">
-            <Button onClick={handleContactClick}>
+            <Button onClick={scrollToContact}>
               Contact Me
             </Button>
             <Button
               variant="outline"
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = '/Chandrabhushan_Kumar_Design.pdf';
-                link.download = 'Chandrabhushan_CV.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
+              onClick={() => downloadResume('Designer')}
             >View Resume</Button>
             <Button
               variant="outline"
-              onClick={() => {
-                const link = document.createElement('a');
-                link.href = '/Portfolio CB.pdf';
-                link.download = 'Portfolio CB.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-              }}
+              onClick={downloadPortfolio}
             >View Portfolio</Button>
           </div>
         </div>
@@ -144,11 +104,11 @@ export function DesignerProfile() {
       <section className="py-8">
         <h2 className="text-3xl font-bold mb-6">Featured Projects</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects.map((proje, idx) => (
+          {designProjects.map((project, idx) => (
             <Card key={idx} className="overflow-hidden">
               <div className="aspect-video relative">
                 <Image
-                  src={proje.src}
+                  src={project.src}
                   alt={`Project ${idx}`}
                   width={400}
                   height={200}
@@ -156,17 +116,17 @@ export function DesignerProfile() {
                 />
               </div>
               <CardHeader>
-                <CardTitle>{proje.title}</CardTitle>
+                <CardTitle>{project.title}</CardTitle>
                 <CardDescription>UI/UX Design</CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="line-clamp-2">
-                  {proje.description}
+                  {project.description}
                 </p>
               </CardContent>
               <CardFooter>
                 <Button variant="outline" size="sm">
-                  <a href={proje.figma} target="_blank" rel="noopener noreferrer">Figma link</a>
+                  <a href={project.figma} target="_blank" rel="noopener noreferrer">Figma link</a>
                 </Button>
               </CardFooter>
             </Card>
@@ -177,7 +137,7 @@ export function DesignerProfile() {
       <section className="py-8">
         <h2 className="text-3xl font-bold mb-6">Experience</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[...designData].map((item, id) => (
+          {designData.map((item, id) => (
             <Card key={id} className="relative">
               <CardHeader>
                 <div className="flex items-center gap-4">

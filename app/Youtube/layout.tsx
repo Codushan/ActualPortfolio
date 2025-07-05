@@ -8,18 +8,16 @@ export const metadata = {
     generator: 'v0.dev'
 }
 
-export default function RootLayout({
+export default function YoutubeLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="theme-transition">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
-      </body>
-    </html>
+    <div className="youtube-layout theme-transition">
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        {children}
+      </ThemeProvider>
+    </div>
   )
 }

@@ -7,22 +7,12 @@ import { Button } from "@/app/Main/uiMain/button"
 import { Building, HardHat, Ruler, Compass, Award, Mail, Phone } from "lucide-react"
 import Image from "next/image"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/Main/uiMain/tabs"
-import data from "@/components/data"
+import { myData, civilData } from "@/lib/data"
+import { useScrollToContact } from "@/hooks/use-scroll-to-contact"
 
 export function CivilEngineerProfile() {
   const { themeStyle } = useTheme()
-
-  const { myData, sdeExp, civilData, designData, managementData } = data;
-  const handleContactClick = () => {
-    // Using window.location.href with hash to navigate to the contact section
-    const contactSection = document.getElementById('contact');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      // Fallback if the element isn't found in the current page
-      window.location.href = '/#contact';
-    }
-  };
+  const scrollToContact = useScrollToContact()
 
   return (
     <div className="space-y-8">
@@ -41,7 +31,7 @@ export function CivilEngineerProfile() {
             <Badge>Sustainable Development</Badge>
           </div>
           <div className="flex gap-3 pt-4">
-            <Button onClick={handleContactClick}>Contact Me</Button>
+            <Button onClick={scrollToContact}>Contact Me</Button>
             <Button variant="outline">View Portfolio</Button>
           </div>
         </div>
@@ -116,19 +106,15 @@ export function CivilEngineerProfile() {
         <h2 className="text-3xl font-bold mb-6">Skills</h2>
         <Card>
           <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row justify-between">
+            <div className="flex flex-col md:flex-row justify-between">
               <div className="flex items-center gap-4">
-                {/* <Mail className="h-8 w-8 text-primary" /> */}
                 <div>
                   <h3 className="font-medium">Autocad</h3>
-                  {/* <p>robert.johnson@example.com</p> */}
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                {/* <Phone className="h-8 w-8 text-primary" /> */}
                 <div>
                   <h3 className="font-medium">Matlab</h3>
-                  {/* <p>(555) 123-4567</p> */}
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -144,19 +130,15 @@ export function CivilEngineerProfile() {
             </div>
           </CardContent>
           <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row justify-between">
+            <div className="flex flex-col md:flex-row justify-between">
               <div className="flex items-center gap-4">
-                {/* <Mail className="h-8 w-8 text-primary" /> */}
                 <div>
                   <h3 className="font-medium">Word</h3>
-                  {/* <p>robert.johnson@example.com</p> */}
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                {/* <Phone className="h-8 w-8 text-primary" /> */}
                 <div>
                   <h3 className="font-medium">Excel</h3>
-                  {/* <p>(555) 123-4567</p> */}
                 </div>
               </div>
               <div className="flex items-center gap-4">
@@ -178,13 +160,13 @@ export function CivilEngineerProfile() {
         <h2 className="text-3xl font-bold mb-6">Featured Projects</h2>
         <Tabs defaultValue="commercial" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="commercial">Collage</TabsTrigger>
+            <TabsTrigger value="commercial">College</TabsTrigger>
             <TabsTrigger value="residential">Residential</TabsTrigger>
             <TabsTrigger value="infrastructure">Infrastructure</TabsTrigger>
           </TabsList>
           <TabsContent value="commercial" className="pt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...civilData].map((project, id) => (
+              {civilData.map((project, id) => (
                 <Card key={id} className="overflow-hidden">
                   <div className="aspect-video relative">
                     <Image
@@ -302,19 +284,19 @@ export function CivilEngineerProfile() {
               title: "Workshop on Innovation and Adaptability",
               issuer: "CIKS, NIT Calicut",
               year: "16 March 2024",
-              description: "Attended a workshop on innovation and adaptability: Mahabharata's Timeless Relevance in Rapidly Changing Buisiness Landscape.",
+              description: "Attended a workshop on innovation and adaptability: Mahabharata's Timeless Relevance in Rapidly Changing Business Landscape.",
             },
             {
               title: "Translating English Documents to Hindi",
               issuer: "Official Language Unit, NIT Calicut",
               year: "28 October 2023",
-              description: "Participated in one day workshop organnised by the Official Language Unit along with CITRA on online tools for translating English Documents to Hindi at the Central Computer Centre of NIT Calicut.",
+              description: "Participated in one day workshop organised by the Official Language Unit along with CITRA on online tools for translating English Documents to Hindi at the Central Computer Centre of NIT Calicut.",
             },
             {
               title: "Hindi Pakhwada",
               issuer: "Official Language Unit, NIT Calicut",
               year: "14 september 2023",
-              description: "Participated in a poetry competion and delivered my best poetries.",
+              description: "Participated in a poetry competition and delivered my best poetries.",
             },
           ].map((cert, index) => (
             <Card key={index}>
@@ -339,5 +321,3 @@ export function CivilEngineerProfile() {
     </div>
   )
 }
-
-
