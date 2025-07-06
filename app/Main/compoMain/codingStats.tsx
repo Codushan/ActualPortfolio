@@ -38,7 +38,7 @@ interface TabData {
 
 // Main App component
 const CodingStats: React.FC = () => {
-  // Define hardcoded data for tabs (used for Coding Ninjas and Blind 75, or as fallbacks)
+  // Define hardcoded data for tabs
   const tabData: TabData = {
     "LeetCode": {
       total: { completed: 54, total: 100, percentage: 10 },
@@ -53,8 +53,8 @@ const CodingStats: React.FC = () => {
       hard: { completed: 6, total: 30 },
     },
     "Coding Ninjas": {
-      total: { completed: 26, total: 100, percentage: 26 },
-      easy: { completed: 24, total: 20 },
+      total: { completed: 22, total: 100, percentage: 27 },
+      easy: { completed: 20, total: 20 },
       medium: { completed: 2, total: 50 },
       hard: { completed: 0, total: 30 },
     },
@@ -68,7 +68,7 @@ const CodingStats: React.FC = () => {
   };
 
   // State to manage the currently active tab
-  const [activeTab, setActiveTab] = useState("LeetCode"); // Default active tab, changed to LeetCode for API demo
+  const [activeTab, setActiveTab] = useState("LeetCode"); // Default active tab
 
   // Interface for fetched statistics
   interface Stats {
@@ -90,6 +90,16 @@ const CodingStats: React.FC = () => {
       hardSolved: number;   // Changed from 'hard' to 'hardSolved' to match API response
       streak: number;
       contestRating: number;
+    };
+    codingNinjas: {
+      totalSolved: number;
+      easySolved: number;
+      mediumSolved: number;
+      hardSolved: number;
+      totalQuestions: number;
+      totalEasy: number;
+      totalMedium: number;
+      totalHard: number;
     };
     gfg: {
       total_problems_solved: number; // Changed to match API response
@@ -121,6 +131,16 @@ const CodingStats: React.FC = () => {
       streak: 0,
       contestRating: 0
     },
+    codingNinjas: {
+      totalSolved: 0,
+      easySolved: 0,
+      mediumSolved: 0,
+      hardSolved: 0,
+      totalQuestions: 0,
+      totalEasy: 0,
+      totalMedium: 0,
+      totalHard: 0,
+    },
     gfg: {
       total_problems_solved: 0,
       total_score: 0,
@@ -140,13 +160,6 @@ const CodingStats: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [showComponent, setShowComponent] = useState(false);
   const [hasCheckedCache, setHasCheckedCache] = useState(false);
-  const [isFirstLoad, setIsFirstLoad] = useState(() => {
-    // Check localStorage immediately to determine if this is first load
-    if (typeof window !== 'undefined') {
-      return !localStorage.getItem('hasLoadedBefore');
-    }
-    return true; // Default to first load during SSR
-  });
 
   // Check for cached data on component mount
   useEffect(() => {
@@ -160,30 +173,18 @@ const CodingStats: React.FC = () => {
       const timestamp = parseInt(cachedTimestamp);
       const now = Date.now();
       const cacheAge = now - timestamp;
-      const cacheValidDuration = 60 * 60 * 1000; // 1 hour in milliseconds (increased cache duration)
+      const cacheValidDuration = 60 * 60 * 1000; // 1 hour in milliseconds
       
       if (cacheAge < cacheValidDuration) {
-        // Use cached data if it's less than 1 hour old
+        // Use cached data immediately if it's less than 1 hour old
         try {
           const parsedData = JSON.parse(cachedData);
           setActualStats(parsedData);
           setAnimationReady(true);
           setIsLoading(false);
           setHasCheckedCache(true);
-          // Show immediately if not first load, or with animation if first load
-          if (isFirstLoad) {
-            // First load - show with animation
-            setTimeout(() => {
-              setShowComponent(true);
-            }, 50);
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('hasLoadedBefore', 'true');
-            }
-          } else {
-            // Not first load - show immediately without animation
-            setShowComponent(true);
-          }
-          return; // Exit early, don't fetch from APIs
+          setShowComponent(true); // Show immediately when cached data is available
+          // Continue to fetch fresh data in background (don't return early)
         } catch (err) {
           console.error('Error parsing cached data:', err);
           // Continue to fetch fresh data if cache is corrupted
@@ -191,10 +192,10 @@ const CodingStats: React.FC = () => {
       }
     }
     
-    // If no valid cache, set loading to true and fetch fresh data
+    // Always set loading to true and fetch fresh data
     setIsLoading(true);
     setHasCheckedCache(true);
-  }, [isFirstLoad]); // Add isFirstLoad as dependency
+  }, []); // Remove isFirstLoad as dependency
 
   // Fetch stats from APIs on component mount
   useEffect(() => {
@@ -210,6 +211,20 @@ const CodingStats: React.FC = () => {
           fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://gfgstatscard.vercel.app/chandrabhushq6z0?raw=true')}`)
         ]);
 
+        // Check if any response failed
+        if (!codingNinjaResponse.ok) {
+          console.error('Coding Ninjas API failed:', codingNinjaResponse.status, codingNinjaResponse.statusText);
+        }
+        if (!githubResponse.ok) {
+          console.error('GitHub API failed:', githubResponse.status, githubResponse.statusText);
+        }
+        if (!leetcodeResponse.ok) {
+          console.error('LeetCode API failed:', leetcodeResponse.status, leetcodeResponse.statusText);
+        }
+        if (!gfgResponse.ok) {
+          console.error('GFG API failed:', gfgResponse.status, gfgResponse.statusText);
+        }
+
         const [codinNinjaData, githubData, leetcodeData, gfgData] = await Promise.all([
           codingNinjaResponse.json(),
           githubResponse.json(),
@@ -219,6 +234,11 @@ const CodingStats: React.FC = () => {
 
         if (leetcodeData.status === 'error') {
           throw new Error(leetcodeData.message);
+        }
+
+        // Check if Coding Ninjas API returned an error
+        if (codinNinjaData.status === 'error') {
+          console.error('Coding Ninjas API Error:', codinNinjaData.message);
         }
 
         const newStats: Stats = {
@@ -243,6 +263,16 @@ const CodingStats: React.FC = () => {
             streak: leetcodeData.streak || 0,
             contestRating: leetcodeData.ranking || 0
           },
+         codingNinjas: {
+            totalSolved: codinNinjaData.totalSolved || 0,
+            easySolved: codinNinjaData.easySolved || 0,
+            mediumSolved: codinNinjaData.mediumSolved || 0,
+            hardSolved: codinNinjaData.hardSolved || 0,
+            totalQuestions: codinNinjaData.totalQuestions || 0,
+            totalEasy: codinNinjaData.totalEasy || 0,
+            totalMedium: codinNinjaData.totalMedium || 0,
+            totalHard: codinNinjaData.totalHard || 0,
+         },
           gfg: {
             total_problems_solved: gfgData.total_problems_solved || 0,
             total_score: gfgData.total_score || 0,
@@ -255,29 +285,21 @@ const CodingStats: React.FC = () => {
           }
         };
 
-        // Cache the data in localStorage with longer duration
+        // Always cache the fresh data in localStorage
         if (typeof window !== 'undefined') {
           localStorage.setItem('codingStatsData', JSON.stringify(newStats));
           localStorage.setItem('codingStatsTimestamp', Date.now().toString());
         }
 
+        // Update the stats with fresh data
         setActualStats(newStats);
-
-                  // Show immediately if not first load, or with animation if first load
-          setAnimationReady(true);
-          setIsLoading(false);
-          if (isFirstLoad) {
-            // First load - show with animation
-            setTimeout(() => {
-              setShowComponent(true);
-            }, 50);
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('hasLoadedBefore', 'true');
-            }
-          } else {
-            // Not first load - show immediately without animation
-            setShowComponent(true);
-          }
+        setAnimationReady(true);
+        setIsLoading(false);
+        
+        // Show component if not already shown
+        if (!showComponent) {
+          setShowComponent(true);
+        }
 
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -291,11 +313,11 @@ const CodingStats: React.FC = () => {
       }
     };
 
-    // Only fetch if we don't have valid cached data, we're in loading state, and we've checked cache
-    if (!actualStats && isLoading && hasCheckedCache) {
+    // Always fetch fresh data if we're in loading state and have checked cache
+    if (isLoading && hasCheckedCache) {
       fetchStats();
     }
-  }, [actualStats, isLoading, hasCheckedCache, isFirstLoad]); // Add isFirstLoad as dependency
+  }, [actualStats, isLoading, hasCheckedCache, showComponent]); // Add showComponent as dependency
 
   // Set actual stats for the view after loading and animation is ready
   useEffect(() => {
@@ -305,38 +327,87 @@ const CodingStats: React.FC = () => {
   }, [actualStats, animationReady]);
 
   // Determine the data to display based on the active tab
-  const getDisplayData = () => {
-    if (!stats) return tabData[activeTab]; // Fallback if stats not loaded
+const getDisplayData = () => {
+  if (!stats) return tabData[activeTab]; // Fallback if stats not loaded
 
-    switch (activeTab) {
-      case "LeetCode":
-        return {
-          total: { completed: stats.leetcode.solved, total: 100, percentage: (stats.leetcode.solved / 100) * 100 },
-          easy: { completed: stats.leetcode.easySolved, total: (tabData["LeetCode"] as TabDataItem).easy.total },
-          medium: { completed: stats.leetcode.mediumSolved, total: (tabData["LeetCode"] as TabDataItem).medium.total },
-          hard: { completed: stats.leetcode.hardSolved, total: (tabData["LeetCode"] as TabDataItem).hard.total },
-        };
-      case "GFG":
-        return {
-          total: { completed: stats.gfg.total_problems_solved, total: 100, percentage: (stats.gfg.total_problems_solved / 100) * 100 },
-          easy: { completed: stats.gfg.Easy, total: (tabData["GFG"] as TabDataItem).easy.total },
-          medium: { completed: stats.gfg.Medium, total: (tabData["GFG"] as TabDataItem).medium.total },
-          hard: { completed: stats.gfg.Hard, total: (tabData["GFG"] as TabDataItem).hard.total },
-        };
-      case "Coding Ninjas":
-        return tabData[activeTab]; // Uses hardcoded data for Coding Ninjas
-      case "GitHub":
-        return stats.github; // Returns the full GitHub stats object
-      default:
-        return tabData[activeTab];
-    }
-  };
+  switch (activeTab) {
+    case "LeetCode":
+      return {
+        total: {
+          completed: stats.leetcode.solved,
+          total: 100,
+          percentage: Math.round((stats.leetcode.solved / 100) * 100), // Applied Math.round() here
+        },
+        easy: { completed: stats.leetcode.easySolved, total: (tabData["LeetCode"] as TabDataItem).easy.total },
+        medium: { completed: stats.leetcode.mediumSolved, total: (tabData["LeetCode"] as TabDataItem).medium.total },
+        hard: { completed: stats.leetcode.hardSolved, total: (tabData["LeetCode"] as TabDataItem).hard.total },
+      };
+    case "GFG":
+      return {
+        total: {
+          completed: stats.gfg.total_problems_solved,
+          total: 100,
+          percentage: Math.round((stats.gfg.total_problems_solved / 100) * 100), // Applied Math.round() here
+        },
+        easy: { completed: stats.gfg.Easy, total: (tabData["GFG"] as TabDataItem).easy.total },
+        medium: { completed: stats.gfg.Medium, total: (tabData["GFG"] as TabDataItem).medium.total },
+        hard: { completed: stats.gfg.Hard, total: (tabData["GFG"] as TabDataItem).hard.total },
+      };
+    case "Coding Ninjas":
+      // Add a check to ensure stats.codingNinjas exists
+      if (!stats.codingNinjas) {
+        // Fallback to initial hardcoded data or return a default/loading state
+        return tabData["Coding Ninjas"] as TabDataItem;
+      }
+
+      const cnTotalCompleted = stats.codingNinjas.totalSolved;
+      
+      // Use API data for solved counts, but fall back to reasonable totals if API returns 0
+      const cnTotalQuestions = stats.codingNinjas.totalQuestions > 0 ? stats.codingNinjas.totalQuestions : 100;
+      const cnTotalPercentage = cnTotalQuestions > 0 ? (cnTotalCompleted / cnTotalQuestions) * 100 : 0;
+
+      // For difficulty levels, use API solved counts but fall back to reasonable totals
+      const cnEasyTotal = stats.codingNinjas.totalEasy > 0 ? stats.codingNinjas.totalEasy : 20;
+      const cnMediumTotal = stats.codingNinjas.totalMedium > 0 ? stats.codingNinjas.totalMedium : 50;
+      const cnHardTotal = stats.codingNinjas.totalHard > 0 ? stats.codingNinjas.totalHard : 30;
+
+      return {
+        total: {
+          completed: cnTotalCompleted,
+          total: cnTotalQuestions,
+          percentage: Math.round(isNaN(cnTotalPercentage) ? 0 : cnTotalPercentage)
+        },
+        easy: {
+          completed: stats.codingNinjas.easySolved,
+          total: cnEasyTotal
+        },
+        medium: {
+          completed: stats.codingNinjas.mediumSolved,
+          total: cnMediumTotal
+        },
+        hard: {
+          completed: stats.codingNinjas.hardSolved,
+          total: cnHardTotal
+        },
+      };
+
+    case "GitHub":
+      return stats.github; // Returns the full GitHub stats object
+    default:
+      return tabData[activeTab];
+  }
+};
 
   const displayData = getDisplayData();
 
-  // Show loading state - return null to hide the entire component
-  if (isLoading) {
+  // Show loading state only if we have no cached data and are still loading
+  if (isLoading && !actualStats) {
     return null;
+  }
+
+  // If we have cached data, show it immediately even if still loading fresh data
+  if (actualStats && !showComponent) {
+    setShowComponent(true);
   }
 
   if (error) {
