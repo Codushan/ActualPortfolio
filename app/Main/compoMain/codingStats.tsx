@@ -505,7 +505,7 @@ interface TabProps {
 function Tab({ title, isActive, onClick }: TabProps) {
   return (
     <div
-      className={`py-3 px-6 cursor-pointer text-sm font-medium rounded-t-lg ${isActive
+      className={`flex items-center justify-center text-center py-3 px-4 sm:px-6 cursor-pointer text-sm font-medium rounded-t-lg ${isActive
         ? 'text-#fff border-b-2 border-primary bg-gray-700' // Active tab styling
         : 'text-gray-400 hover:text-gray-200 hover:bg-gray-750' // Inactive tab styling
         }`}
