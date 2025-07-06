@@ -21,7 +21,7 @@ export function CivilEngineerProfile() {
           <h1 className="text-4xl font-bold">Chandrabhushan Kumar</h1>
           <h2 className="text-2xl text-muted-foreground">Civil Engineer</h2>
           <p className="text-lg">
-            Professional civil engineer with 10+ years of experience in structural design, project management, and
+            I am final year B.Tech student at {myData.education[0].institute} with a passion for civil engineering. Exceled with internships in civil engineering with experience in subject such as structural design, project management, and
             construction supervision. Specialized in sustainable infrastructure development and urban planning.
           </p>
           <div className="flex flex-wrap gap-2">

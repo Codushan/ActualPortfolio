@@ -56,7 +56,7 @@ export function ManagementProfile() {
           <h1 className="text-4xl font-bold">{myData.name}</h1>
           <h2 className="text-2xl text-muted-foreground">Event Coordinator</h2>
           <p className="text-lg">
-            I am 3rd year B.Tech student at {myData.education[0].institute} with a passion for business management professional with a proven track record of driving organizational growth,
+            I am final year B.Tech student at {myData.education[0].institute} with a passion for business management professional with a proven track record of driving organizational growth,
             optimizing operations, and leading high-performing teams across multiple industries.
           </p>
           <div className="flex flex-wrap gap-2">

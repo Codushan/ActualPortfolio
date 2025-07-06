@@ -61,7 +61,7 @@ export function SoftwareEngineerProfile() {
           <h1 className="text-4xl font-bold">{myData.name}</h1>
           <h2 className="text-2xl text-muted-foreground">Software Engineer & Civil Engineering Student</h2>
           <p className="text-lg">
-            I am 3rd year B.Tech student at {myData.education[0].institute} with a passion for technology and engineering.
+            I am final year B.Tech student at {myData.education[0].institute} with a passion for technology and engineering.
             Full-stack developer with experience building responsive web applications and digital solutions.
           </p>
           <div className="flex flex-wrap gap-2">
