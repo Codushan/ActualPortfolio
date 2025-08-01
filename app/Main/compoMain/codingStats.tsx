@@ -605,14 +605,14 @@ const GitHubStatsSection: React.FC<{ githubStats: { repos: number; stars: number
         <div className="bg-background p-4 rounded-lg flex flex-col items-start">
           <h3 className="text-gray-300 text-base mb-2">Total Stars</h3>
           <p className="text-primary text-6xl font-bold">{githubStats.stars}</p>
-          <p className="text-gray-400 text-sm mt-1">(Requires more API calls)</p>
+{/*           <p className="text-gray-400 text-sm mt-1">(Requires more API calls)</p> */}
         </div>
 
         {/* Contributions Card (Note: Contributions are hardcoded to 0 as the current API does not provide this directly) */}
         <div className="bg-background p-4 rounded-lg flex flex-col items-start">
           <h3 className="text-gray-300 text-base mb-2">Total Contributions</h3>
           <p className="text-primary text-6xl font-bold">{githubStats.contributions}</p>
-          <p className="text-gray-400 text-sm mt-1">(Requires more API calls)</p>
+{/*           <p className="text-gray-400 text-sm mt-1">(Requires more API calls)</p> */}
         </div>
 
         {/* Languages Section */}
