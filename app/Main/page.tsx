@@ -14,9 +14,9 @@ export default function Home() {
             <h1 className="text-2xl font-bold">Portfolio</h1>
             <div className="flex items-center gap-4">
               <ProfileSelector />
-              <div className="hidden md:block">
-                //<ThemeSwitcher />
-              </div>
+{/*               <div className="hidden md:block">
+                <ThemeSwitcher />
+              </div> */}
               <ModeToggle />
             </div>
           </div>
