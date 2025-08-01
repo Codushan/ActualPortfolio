@@ -15,7 +15,7 @@ export default function Home() {
             <div className="flex items-center gap-4">
               <ProfileSelector />
               <div className="hidden md:block">
-                <ThemeSwitcher />
+                //<ThemeSwitcher />
               </div>
               <ModeToggle />
             </div>
