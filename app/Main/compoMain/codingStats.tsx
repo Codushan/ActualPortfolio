@@ -455,7 +455,7 @@ const getDisplayData = () => {
               total={(displayData as any).total.total}
               percentage={(displayData as any).total.percentage}
               color="bg-blue-500"
-              showRing={true}
+              showRing={false}
             />
 
             {/* Easy Progress Card */}
