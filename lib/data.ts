@@ -114,11 +114,25 @@ export const sdeProjects = [
     description: "Led UI/UX and full-stack development as Tech Head. Live at prithvi25.in",
   },
   {
+    title: "Image Confidence",
+    url: "https://codushan-gis-image-model-streamlit-app-rvt9il.streamlit.app/",
+    github: "https://github.com/Codushan/GIS-image-model",
+    duration: "Sep 2025",
+    description: "Built a image model that gives confice interval for an image fro what it has predicted among Water, Forest and Urban",
+  },
+  {
     title: "RIG Club Website",
     url: "https://rignitc.com",
     github: "https://github.com/Codushan/rig_web",
     duration: "Oct – Dec 2024",
     description: "Built full-stack website with UI/UX for Robotics Interested Group. Live at rignitc.com",
+  },
+  {
+    title: "AI Chat Interface",
+    url: "https://ai-chat-sigma-gray.vercel.app/",
+    github: "https://github.com/Codushan/Ai-Chat",
+    duration: "Sep 2025",
+    description: "Used Gemini API and laerned how language model works",
   },
   {
     title: "Login & Signup Function",
@@ -147,7 +161,14 @@ export const sdeProjects = [
     github: "",
     duration: "Aug 2024",
     description: "Created simple browser games like Stone Paper Scissors and Tic-Tac-Toe.",
-  }
+  },
+  {
+    title: "RIG Club Website",
+    url: "https://rignitc.com",
+    github: "https://github.com/Codushan/rig_web",
+    duration: "Oct – Dec 2024",
+    description: "Built full-stack website with UI/UX for Robotics Interested Group. Live at rignitc.com",
+  },
 ];
 
 export const designProjects = [
