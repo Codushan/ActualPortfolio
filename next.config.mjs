@@ -16,7 +16,9 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
   },
-  turbopack: {},
+  turbopack: {
+    root: process.cwd(),
+  },
   // Configure rewrites to handle components directory and API proxy
   async rewrites() {
     return [
