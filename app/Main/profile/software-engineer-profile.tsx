@@ -10,7 +10,7 @@ import { Progress } from "@/app/Main/uiMain/progress"
 import { myData, sdeExp, civilData, sdeProjects } from "@/lib/data"
 import { useScrollToContact } from "@/hooks/use-scroll-to-contact"
 import { useDownload } from "@/hooks/use-download"
-import Stats from "../compoMain/codingStats"
+import CodingStats from "../compoMain/codingStats"
 
 export function SoftwareEngineerProfile() {
   const { themeStyle } = useTheme()
@@ -104,7 +104,7 @@ export function SoftwareEngineerProfile() {
       </section>
       
       <section className="py-0">
-        <Stats />
+        <CodingStats />
       </section>
 
       <section className="py-8">

@@ -208,7 +208,7 @@ const CodingStats: React.FC = () => {
           fetch('https://coding-ninja-api.vercel.app/api/test/Codushan'),
           fetch('https://api.github.com/users/Codushan'),
           fetch('https://leetcode-stats-api.herokuapp.com/Cbonleet'),
-          fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent('https://gfgstatscard.vercel.app/chandrabhushq6z0?raw=true')}`)
+          fetch(`https://gfg-scrapper.vercel.app/chandrabhushq6z0`)
         ]);
 
         // Check if any response failed
